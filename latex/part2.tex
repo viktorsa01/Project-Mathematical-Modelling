@@ -1,0 +1,39 @@
+\subsection{Question 5}
+We aim to derive the heat equation on the following form by conservation of energy
+\begin{equation}
+  \partial_t (c\rho T) = \nabla \cdot \nbrack{ k\nabla T } + q
+  \label{eq:heat-eq}
+\end{equation}
+where $c$ is the specific heat capacity, $\rho$ the density, $k$ the thermal conductivity and $q$ a heat source. 
+In other words from \eqref{eq:heat-eq}, for a fixed control volume $V$, we have that the rate of change of thermal energy in $V$ equals the net heat flux into $V$ added the internal heat source.
+
+Looking at the internal energy we have
+\begin{equation}
+  U = \int_V \rho cT \diff V,
+  \label{eq:internal-energy}
+\end{equation}
+and by Fourier's law we have that the heat flux can be expressed as
+\begin{equation}
+  \Phi = -k\nabla T.
+  \label{eq:fouriers-law}
+\end{equation}
+The total thermal energy per time in $V$, is the total heat flux over $\partial V = S$ added the heat source
+\begin{equation}
+  \partial_t Q = \int_S \Phi \cdot \mathbf{n} \diff S + \int_V q \diff V
+  \label{eq:thermal-energy}
+\end{equation}
+where $\mathbf{n}$ a surface normal.
+By the first law of thermodynamics we have that the rate of change of internal energy can be expressed as
+\begin{equation}
+  \partial_t U = \partial_t Q
+  \label{eq:TD1}
+\end{equation}
+By \eqref{eq:internal-energy}, \eqref{eq:fouriers-law}, \eqref{eq:thermal-energy} and the divergence theorem, we have that the conservation of energy \eqref{eq:heat-eq} on integral form is
+\begin{equation}
+  \int_V  \partial_t (\rho cT) \diff V = \int_V \nabla \cdot \nbrack{ k\nabla T } \diff V + \int_V q \diff V.
+  \label{eq:int-form}
+\end{equation}
+
+
+\subsection{Question 6}
+
