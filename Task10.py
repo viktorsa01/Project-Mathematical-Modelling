@@ -2,12 +2,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 a = 0; b = 1
-M = 1000
-D = 10
+M = 100
+D = 0.3
 B_out = 1.45
-A_out = 200
+A_out = 201.4
 S_2 = -0.477
-x_s = 0.3
+x_s = 0.1
 a_u = 0.38
 a_l = 0.68
 
@@ -30,6 +30,7 @@ def a(x,x_s):
             a_arr[i] = a_l
     return a_arr
 
+
 def tridiag(sub, mid, sup, N):
     '''
     Eivind
@@ -40,7 +41,23 @@ def tridiag(sub, mid, sup, N):
     A += mid*np.diag(e) 
     A += sup*np.diag(e[1:], 1)
 
+   
     return A
+
+def applyNeumann(A_temp, x, kappa):
+    h = x[1]-x[0]
+    M = len(x)-1
+     # Apply Neumann
+    A = np.zeros((x.size,x.size))
+    A[1:-1,1:-1] = A_temp
+    
+    kappa_half = kappa(x[0]+h/2)
+    A[0,0:2] = 2*kappa_half
+    kappa_M_half = kappa(x[M]-h/2)
+    A[M,M-1:M+1] = 2*kappa_M_half
+
+    return A
+
 
 def getDiags(kappa, x):
     
@@ -54,14 +71,15 @@ def getDiags(kappa, x):
 
 sub, mid, sup = getDiags(kappa,x)
 A = tridiag(sub,mid,sup,M-1)
-
-BT = np.eye(M-1)*B_out
+A = applyNeumann(A,x,kappa)
+print(A)
+BT = np.eye(M+1)*B_out
 
 LHS = -D*A + BT
-RHS = np.ones(M-1)*-A_out + Q(x_s)*S(x[1:-1])*a(x[1:-1],x_s) 
+RHS = np.ones(M+1)*-A_out + Q(x_s)*S(x)*a(x,x_s)
 
 T = np.linalg.solve(LHS,RHS)
 
-plt.plot(x[1:-1],T)
+plt.plot(x,T)
 
 # %%
