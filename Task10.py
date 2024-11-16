@@ -17,9 +17,43 @@ h = (b-a)/M
 kappa = lambda x: 1-x**2
 S = lambda x: 1+S_2*0.5*(3*x**2-1)
 
+def P_2(x):
+    return 1/2*(3*x**2-1)
+
+def y(x):
+    sum = 1
+    for n in range (100):
+        sum += ( (2*n*(2*n+1)+B_out/D) / (2*n+2)*(2*n+1) )**(n+1) * x**(2*n+2)
+    return sum
+
+def y_prime(x):
+    sum = 0
+    for n in range (100):
+        sum += ( (2*n*(2*n+1)+B_out/D) / (2*n+2)*(2*n+1) )**(n+1) * (2*n+2)*x**(2*n+1)
+    return y_prime
+
+def z(x):
+    #Må bli enig med viktor om utrykket
+    sum = 0
+    for n in range (100):
+        sum += 0
+    return sum
+
+def z_prime(x):
+    #Må bli enig med viktor om utrykket
+    sum = 0
+    for n in range (100):
+        sum += 0
+    return sum
+
+def alpha_0_hat(x_s):
+    gamma = ( (S_2*P_2(x_s)) / (6*D + B_out) + 1/B_out) * (a_u-a_l)
+    lambd = (S_2*3*x_s / (6*D + B_out)) * (a_u-a_l)
+    return ( z_prime(x_s)*gamma - z(x_s)*lambd ) / ( y(x_s)*z_prime(x_s) - y_prime(x_s)*z_prime(x_s) )
+
 def Q(x_s):
     #Legg inn Q
-    return 1360/4
+    return (A_out + 273.15) / (B_out*(alpha_0_hat(x_s)*y(x_s) + a_l/B_out + S_2*a_l*P_2(x_s)/(6*D+B_out)))
 
 def a(x,x_s):
     a_arr = np.zeros(len(x))
