@@ -4,8 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Define parameters and functions
-D = 1.0  # Diffusion coefficient
-B = 1.0  # Reaction coefficient
+D = 0.3  # Diffusion coefficient
+B = 1.45  # Reaction coefficient
 
 # Define the range of x and number of points
 
@@ -19,7 +19,7 @@ a_u = 0.38
 a_l = 0.68
 
 x_start, x_end = 0, 1
-M = 300
+M = 1000
 x = np.linspace(x_start, x_end, M)
 
 dx = x[1] - x[0]
@@ -43,9 +43,7 @@ def K(x):
 
 # Central difference method
 K_values = K(x)  # Precompute K(x)
-f_values = np.ones(len(x))*-A_out + Q(x_s)*S(x)*a(x,x_s)
-
-U = np.argmin(abs(f_values))
+f_values = -A_out + Q(x_s)*S(x)*a(x,x_s)
 
 # Construct the system of equations
 A = np.zeros((M, M))
