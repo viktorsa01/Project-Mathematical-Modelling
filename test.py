@@ -3,16 +3,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Define parameters and functions
-D = 0.3  # Diffusion coefficient
-B = 1.45  # Reaction coefficient
+D = 0.3  
 
-# Define the range of x and number of points
-
-
-D = 0.3
 B_out = 1.45
 A_out = 201.4
+
 S_2 = -0.477
 x_s = 0.95
 a_u = 0.38
@@ -99,10 +94,8 @@ f_values = -A_out + Q(x_s)*S(x)*a(x,x_s)
 A = np.zeros((M, M))
 b = np.zeros(M)
 for i in range(1, M-1):
-    # Compute coefficients
-
     A[i, i - 1] = -D * K(x[i]) / dx**2 - D*x[i]/dx 
-    A[i, i] = D * (2*K(x[i])) / dx**2 + B
+    A[i, i] = D * (2*K(x[i])) / dx**2 + B_out
     A[i, i + 1] = -D * K(x[i]) / dx**2 +  D*x[i]/dx
     b[i] = f_values[i]
 
@@ -117,12 +110,11 @@ b[-1] = 0
 
 P = int(M*x_s)
 
-# Impose smooth funciton at x_s 
+# Impose continuous funciton at x_s 
 A[P,P] = 1
 A[P,P-1] = 1
 A[P,P+1] = 1
 b[P] = 0
-
 
 # Solve the system of equations
 T = np.linalg.solve(A, b)
