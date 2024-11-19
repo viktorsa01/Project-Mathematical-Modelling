@@ -7,7 +7,7 @@ D = 0.3
 B_out = 1.45
 A_out = 201.4
 S_2 = -0.477
-x_s = 0.1
+x_s = 0.95
 a_u = 0.38
 a_l = 0.68
 
@@ -66,7 +66,8 @@ def alpha_0_hat(x_s):
     return ( z_prime(1-x_s)*gamma - z(1-x_s)*lambd ) / ( y(x_s)*z_prime(1-x_s) - y_prime(x_s)*z_prime(1-x_s) )
 
 def Q(x_s):
-    return (A_out) / (B_out*(alpha_0_hat(x_s)*y(x_s) + a_l/B_out + S_2*a_l*P_2(x_s)/(6*D+B_out)))
+    # return (A_out) / (B_out*(alpha_0_hat(x_s)*y(x_s) + a_l/B_out + S_2*a_l*P_2(x_s)/(6*D+B_out)))
+    return 1360/4
 
 def a(x,x_s):
     a_arr = np.zeros(len(x))
@@ -99,9 +100,22 @@ def applyNeumann(A_temp, x, kappa):
     A[1:-1,1:-1] = A_temp
     
     kappa_half = kappa(x[0]+h/2)
-    A[0,0:2] = 2*kappa_half
+    A[0, 0] = -2*kappa_half
+    A[0, 1] =  2*kappa_half
     kappa_M_half = kappa(x[M]-h/2)
-    A[M,M-1:M+1] = 2*kappa_M_half
+
+    A[M,M-1] = 2*kappa_M_half
+    A[M, M] = -2*kappa_M_half
+
+    A[1, 0] = kappa_half
+    A[M-1, M] = kappa_M_half
+
+
+    P = int(x_s*M)
+    A[P,P] = 1
+    A[P,P-1] = 1
+    A[P,P+1] = 1
+    
 
     return A
 
@@ -118,15 +132,19 @@ def getDiags(kappa, x):
 
 sub, mid, sup = getDiags(kappa,x)
 A = tridiag(sub,mid,sup,M-1)
+
 A = applyNeumann(A,x,kappa)
-print(A)
+
 BT = np.eye(M+1)*B_out
 
 LHS = -D*A + BT
 RHS = np.ones(M+1)*-A_out + Q(x_s)*S(x)*a(x,x_s)
+RHS[int(x_s*M)] = 0
 
 T = np.linalg.solve(LHS,RHS)
 
 plt.plot(x,T)
+plt.show()
 
 # %%
+ 
